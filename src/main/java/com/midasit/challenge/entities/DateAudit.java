@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 public abstract class DateAudit {
 
     @CreatedDate
-    private LocalDateTime createdBy;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
-    private LocalDateTime updatedBy;
+    private LocalDateTime updatedDate;
 }

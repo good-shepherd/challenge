@@ -105,13 +105,11 @@ public class AuthController {
             new ResponseEntity(new ApiResponse(false, "The token is not valid!"), HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findByUserConfirmationToken(token).orElseThrow(() -> new AppException("User doesn't exist."));
-        System.out.println(user.toString());
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not set."));
         Set<Role> set = new HashSet<>();
         set.add(userRole);
         user.setRoles(set);
-        user.setUserConfirmationToken("confirmed");
-        System.out.println(user.toString());
+        user.setUserConfirmationToken("");
         userRepository.save(user);
         return ResponseEntity.ok(new ApiResponse(true, "User confirmed successfully."));
     }
