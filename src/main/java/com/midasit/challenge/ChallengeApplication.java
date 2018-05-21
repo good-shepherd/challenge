@@ -21,6 +21,7 @@ public class ChallengeApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // roleRepository.save(new Role(RoleName.ROLE_USER));
+        // roleRepository.save(new Role(RoleName.ROLE_UNCONFIRMED));
         // roleRepository.save(new Role(RoleName.ROLE_ADMIN));
     }
 }

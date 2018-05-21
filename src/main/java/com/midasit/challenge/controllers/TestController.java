@@ -1,5 +1,7 @@
 package com.midasit.challenge.controllers;
 
+import com.midasit.challenge.security.CurrentUser;
+import com.midasit.challenge.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,8 @@ public class TestController {
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public String helloUser() {
-        return "hello user!!";
+    public String helloUser(@CurrentUser UserPrincipal currentUser) {
+        return "hello " + currentUser.getEmail();
     }
 
     @GetMapping
@@ -29,3 +31,4 @@ public class TestController {
     }
 
 }
+
