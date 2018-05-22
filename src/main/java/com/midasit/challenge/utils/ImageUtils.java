@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 
-public static class ImageUtils {
+public class ImageUtils {
 	private static Map<String, MediaType> mediaMap;
 
 	static{
