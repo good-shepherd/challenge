@@ -38,6 +38,12 @@ public class User extends DateAudit implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "follower")
+    private Set<Relationship> followers = new HashSet<>();
+
+    @OneToMany(mappedBy = "target")
+    private Set<Relationship> targets = new HashSet<>();
+
     public User(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
