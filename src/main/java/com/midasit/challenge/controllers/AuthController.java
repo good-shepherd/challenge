@@ -93,7 +93,7 @@ public class AuthController {
         // need to fix the URL below
         registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
                 + request.getScheme() + "://" + request.getServerName() + "/confirm?t=" + user.getUserConfirmationToken());
-        registrationEmail.setFrom("noreply@domain.com");
+        // registrationEmail.setFrom("noreply@domain.com");
         emailService.sendEmail(registrationEmail);
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully. Check your email and confirm it."));
     }
