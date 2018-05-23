@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import SignUp from '@/components/SignUp';
 import SignIn from '@/components/SignIn';
 import HelloWorld from '@/components/HelloWorld';
+import Blog from '@/components/Blog';
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/signin',
       name: 'SignIn',
       component: SignIn,
+    },
+    {
+      path: '/blog',
+      name: 'Blog',
+      component: Blog,
     },
   ],
 });

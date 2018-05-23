@@ -1,34 +1,30 @@
 <template>
   <div id="app">
-    <div class="topnav">
-      <a href="#">{{useremail}}</a>
-    </div>
-    <nav v-bind:class="active" v-on:click.prevent>
-      <a href="#" class="home" v-on:click="makeActive('home')">Home</a>
-      <a href="#" class="signin" v-on:click="makeActive('signin')">
-        <router-link to="signin">Sign In</router-link>
+    <nav class="topnav">
+      <a href="#">
+        <router-link to="/">Midas</router-link>
       </a>
-      <a href="#" class="signup" v-on:click="makeActive('signup')">
-        <router-link to="signup">Sign up</router-link>
+      <a href="#">
+        <router-link to="blog">블로그</router-link>
+      </a>
+      <div>
+        <a href="#">
+          <router-link to="signin">로그인</router-link>
+        </a>
+      </div>
+      <a href="#">
+        <router-link to="signup">가입하기</router-link>
       </a>
     </nav>
-    <p>You chose <b>{{ active }}</b></p>
+    <div class="main">
+      <router-view/>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  data() {
-    return {
-      active: 'home',
-    };
-  },
-  methods: {
-    makeActive(item) {
-      this.active = item;
-    },
-  },
   computed: {
     useremail() {
       const email = this.$store.state.useremail;
@@ -42,86 +38,77 @@ export default {
 </script>
 
 <style>
-  *{
-    margin:0;
-    padding:0;
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
   }
 
-  body{
-    font:15px/1.3 'Open Sans', sans-serif;
-    color: #5e5b64;
-    text-align:center;
+  .topnav {
+    overflow: hidden;
+    background-color: #333;
+
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    text-align: right;
   }
 
-  a, a:visited {
-    outline:none;
-    color:#389dc1;
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
   }
 
-  a:hover{
-    text-decoration:none;
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
   }
 
-  section, footer, header, aside, nav{
+  .topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+
+  .sidenav a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
     display: block;
   }
 
-  /*-------------------------
-      The menu
-  --------------------------*/
-
-  nav{
-    display:inline-block;
-    margin:60px auto 45px;
-    background-color:#5597b4;
-    box-shadow:0 1px 1px #ccc;
-    border-radius:2px;
+  .sidenav a:hover {
+    color: #f1f1f1;
   }
 
-  nav a{
-    display:inline-block;
-    padding: 18px 30px;
-    color:#fff !important;
-    font-weight:bold;
-    font-size:16px;
-    text-decoration:none !important;
-    line-height:1;
-    text-transform: uppercase;
-    background-color:transparent;
-
-    -webkit-transition:background-color 0.25s;
-    -moz-transition:background-color 0.25s;
-    transition:background-color 0.25s;
+  .main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    padding: 20px;
   }
 
-  nav a:first-child{
-    border-radius:2px 0 0 2px;
-  }
+  @media screen and (max-height: 450px) {
+    .sidenav {
+      padding-top: 15px;
+    }
 
-  nav a:last-child{
-    border-radius:0 2px 2px 0;
-  }
-
-  nav.home .home,
-  nav.signup .signup,
-  nav.signin .signin,
-  nav.contact .contact{
-    background-color:#e35885;
-  }
-
-  p{
-    font-size:22px;
-    font-weight:bold;
-    color:#7d9098;
-  }
-
-  p b{
-    color:#ffffff;
-    display:inline-block;
-    padding:5px 10px;
-    background-color:#c4d7e0;
-    border-radius:2px;
-    text-transform:uppercase;
-    font-size:18px;
+    .sidenav a {
+      font-size: 18px;
+    }
   }
 </style>
