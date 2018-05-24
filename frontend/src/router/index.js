@@ -4,9 +4,9 @@ import SignUp from '@/components/SignUp';
 import SignIn from '@/components/SignIn';
 import HelloWorld from '@/components/HelloWorld';
 import Blog from '@/components/Blog';
+import Meal from '@/components/Meal';
 
 Vue.use(Router);
-
 export default new Router({
   mode: 'history',
   routes: [
@@ -29,6 +29,11 @@ export default new Router({
       path: '/blog',
       name: 'Blog',
       component: Blog,
+    },
+    {
+      path: '/meal',
+      name: 'Meal',
+      component: Meal,
     },
   ],
 });
