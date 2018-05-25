@@ -5,7 +5,7 @@
       <b-col md="6" class="my-1">
         <b-form-group horizontal label="" class="mb-0">
           <b-input-group>
-            <b-form-input v-model="filter" placeholder="검색어를 입력하세요" />
+            <b-form-input v-model="filter" placeholder="검색어를 입력하세요"/>
             <b-input-group-append>
               <b-btn :disabled="!filter" @click="filter = ''">초기화</b-btn>
             </b-input-group-append>
@@ -61,10 +61,10 @@
 
     <b-row>
       <b-col md="6" class="my-1">
-        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0"/>
       </b-col>
       <b-col md="6" class="my-1">
-        <b-btn @click.stop="showAddModal" variant="primary">Show Modal</b-btn>
+        <b-btn @click.stop="showAddModal" variant="primary">식단 추가하기</b-btn>
       </b-col>
     </b-row>
 
@@ -75,17 +75,63 @@
     <!-- Add modal -->
     <b-modal ref="myModalRef" hide-footer title="식단 추가하기">
       <div class="d-block text-center">
-        <b-row class="my-1" v-for="type in types" :key="type">
-          <b-col sm="3"><label :for="`type-${type}`">Type {{ type.type }}:</label></b-col>
-          <b-col sm="9"><b-form-input :id="`type-${type.type}`" :type="type.type"></b-form-input></b-col>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="name" :for="name">식단명 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="text" v-model="name"></b-form-input>
+          </b-col>
         </b-row>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="price" :for="price">가격 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="number" v-model="price"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="kcal" :for="kcal">열량 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input :id="kcal" type="number" v-model="kcal"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="mealDate" :for="mealDate">식단 날짜 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input :id="mealDate" type="date" v-model="mealDate"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <div v-if="!image">
+          <b-row class="my-1">
+
+            <b-col sm="3">
+              <label v-mode="image" :for="image">사진 :</label>
+            </b-col>
+            <b-col sm="9">
+              <b-form-file class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"
+                           placeholder="이미지를 선택하세요"></b-form-file>
+            </b-col>
+
+          </b-row>
+
+        </div>
+        <div v-else>
+          <b-col sm="12">
+            <b-img :src="image" fluid alt="Fluid image"/>
+          </b-col>
+        </div>
+        <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
+
+
       </div>
-      <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">Close Me</b-btn>
+      <b-btn class="mt-3" variant="outline" block @click.stop="onSubmit">등록</b-btn>
+      <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">취소</b-btn>
     </b-modal>
   </b-container>
 </template>
 
 <script>
+import axios from 'axios';
+
 const items = [
   { isActive: true, price: 4000, kcal: 100, name: '짜장면' },
   { isActive: false, price: 5000, kcal: 200, name: '짬뽕' },
@@ -106,6 +152,11 @@ export default {
   data() {
     return {
       items,
+      name: '',
+      price: '',
+      kcal: '',
+      mealDate: '',
+      image: '',
       fields: [
         { key: 'name', label: '식단명', sortable: true, sortDirection: 'desc' },
         { key: 'price', label: '가격', sortable: true, class: 'text-center' },
@@ -125,8 +176,7 @@ export default {
       types: [{ key: 'name', type: 'text' },
         { key: 'price', type: 'text' },
         { key: 'kcal', type: 'text' },
-        { key: 'mealDate', type: 'text' },
-        { key: 'isActive', type: 'text' },
+        { key: 'mealDate', type: 'date' },
 
       ],
     };
@@ -155,10 +205,60 @@ export default {
       this.currentPage = 1;
     },
     showAddModal() {
+      this.name = '';
+      this.price = '';
+      this.kcal = '';
+      this.mealDate = '';
+      this.image = '';
       this.$refs.myModalRef.show();
     },
     hideAddModal() {
+      this.name = '';
+      this.price = '';
+      this.kcal = '';
+      this.mealDate = '';
+      this.image = '';
       this.$refs.myModalRef.hide();
+    },
+    onSubmit() {
+      console.log(this.name);
+      axios.post('/api/post', {
+        name: this.name,
+        price: this.price,
+        kcal: this.kcal,
+        mealDate: this.mealDate,
+        image: this.image,
+      }).then((response) => {
+        if (response.status === 200) {
+          alert('등록 완료');
+        } else if (response.status === 401) {
+          alert('입력 값을 확인하세요');
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+      this.hideAddModal();
+    },
+    onFileChange(e) {
+      const files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      const image = new Image();
+      const reader = new FileReader();
+      const vm = this;
+
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    removeImage() {
+      this.image = '';
     },
   },
 };
