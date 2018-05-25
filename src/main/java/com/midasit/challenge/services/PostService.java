@@ -12,9 +12,14 @@ import com.midasit.challenge.security.UserPrincipal;
 import com.midasit.challenge.utils.UploadUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +35,7 @@ public class PostService {
     private UserRepository userRepository;
     private UploadUtils uploadUtils;
 
+    // need a feature that deletes files when rollbacking
     @Transactional
     public void uploadPost(PostRequest postRequest, UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
@@ -42,6 +48,7 @@ public class PostService {
         }
         log.info("Saving - " + post.getPostTitle());
         postRepository.save(post);
+        addToEsIndex(post);
     }
 
     @Transactional
@@ -57,6 +64,10 @@ public class PostService {
     @Transactional
     public PostResponse findById(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException());
+        return postToResponse(post);
+    }
+
+    private PostResponse postToResponse(Post post) {
         PostResponse postResponse = new PostResponse();
         postResponse.setUserId(post.getPostWriter().getId());
         postResponse.setTitle(post.getPostTitle());
@@ -71,7 +82,24 @@ public class PostService {
             images.forEach(o -> imageUri.add(o.getImageLocation()));
             postResponse.setImages(imageUri);
         }
-        if (comments != null) postResponse.setComments(new ArrayList<Comment>(comments));
+        if (comments != null) postResponse.setComments(new ArrayList<>(comments));
         return postResponse;
+    }
+
+    private void addToEsIndex(Post post) {
+        PostResponse postResponse = postToResponse(post);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+        RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(50000).setReadTimeout(100000).build();
+        bodyMap.add("user", postResponse.getUser());
+        bodyMap.add("title", postResponse.getTitle());
+        bodyMap.add("content", postResponse.getContent());
+        bodyMap.add("create-date", postResponse.getCreatedDate().toString());
+        bodyMap.add("update-date", postResponse.getUpdatedDate().toString());
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+        String api = "http://192.168.0.7:9200/blog-tests/test/" + post.getId();
+        ResponseEntity<String> response = restTemplate.exchange(api, HttpMethod.PUT, requestEntity, String.class);
+        System.out.println("elasticsearch PUT: " + response.toString());
     }
 }

@@ -6,8 +6,10 @@ import com.midasit.challenge.repositories.RoleRepository;
 import com.midasit.challenge.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
+@Component
 public class DatabaseLoader implements CommandLineRunner {
 
     RoleRepository roleRepository;
@@ -21,7 +23,7 @@ public class DatabaseLoader implements CommandLineRunner {
         // roleRepository.save(new Role(RoleName.ROLE_USER));
         // roleRepository.save(new Role(RoleName.ROLE_ADMIN));
         // userRepository.deleteAll();
-        //postRepository.deleteAll();
+        postRepository.deleteAll();
         //imageRepository.deleteAll();
     }
 }
