@@ -97,7 +97,7 @@ export default {
     //
     // });
   },
-  name: 'Table',
+  name: 'Users',
   data() {
     return {
       items,

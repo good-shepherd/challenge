@@ -2,22 +2,34 @@
   <div id="app">
     <nav class="topnav">
       <a href="#">
-        <router-link to="/">Midas</router-link>
+        <router-link to="/">Midas Cafe</router-link>
       </a>
-      <a href="#">
-        <router-link to="menu">메뉴관리</router-link>
-      </a>
-      <a href="#">
-        <router-link to="users">회원관리</router-link>
-      </a>
-      <div>
+      <div v-if="this.$store.state.token !== 0">
+        <a href="#">
+          <router-link to="menu">메뉴관리</router-link>
+        </a>
+      </div>
+      <div v-if="this.$store.state.token !== 0">
+        <a href="#">
+          <router-link to="users">회원관리</router-link>
+        </a>
+      </div>
+
+      <div v-if="this.$store.state.token === 0">
         <a href="#">
           <router-link to="signin">로그인</router-link>
         </a>
       </div>
+      <div v-else>
+        <a href="#">
+          <router-link to="signout">로그아웃</router-link>
+        </a>
+      </div>
+      <div v-if="this.$store.state.token === 0">
       <a href="#">
         <router-link to="signup">가입하기</router-link>
       </a>
+      </div>
     </nav>
     <div class="main">
       <router-view/>
@@ -35,6 +47,12 @@ export default {
         return email;
       }
       return '로그인하세요';
+    },
+  },
+  method: {
+    onClickLogout() {
+      // LOGOUT 변이 실행 후 리다이렉트
+
     },
   },
 };

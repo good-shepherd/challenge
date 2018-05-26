@@ -41,10 +41,15 @@
              @filtered="onFiltered"
     >
       <template slot="name" slot-scope="row">{{row.value}}</template>
-      <template slot="isActive" slot-scope="row">{{row.value?'판매중입니다':'매진되었습니다'}}</template>
       <template slot="actions" slot-scope="row">
-        <b-button size="sm" @click.stop="info(row.item, row.index, $event.target)" class="mr-1">
+        <b-button size="sm" @click.stop="info(row.item,  $event.target)" class="mr-1">
           자세히보기
+        </b-button>
+        <b-button size="sm" @click.stop="updateProduct(row.item)" class="mr-1">
+          수정
+        </b-button>
+        <b-button size="sm" @click.stop="infos(row.item)" class="mr-1">
+          삭제
         </b-button>
       </template>
     </b-table>
@@ -58,9 +63,111 @@
       </b-col>
     </b-row>
 
+    <!-- Del modal -->
+    <b-modal ref="deleteCheck" hide-footer title="메뉴 추가하기">
+      <div class="d-block text-center">
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="name" :for="name">메뉴 이름 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="text" v-model="name"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="price" :for="price">가격 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="number" v-model="price"></b-form-input>
+          </b-col>
+        </b-row>
+        <div v-if="!image">
+          <b-row class="my-1">
+
+            <b-col sm="3">
+              <label v-mode="image" :for="image">사진 :</label>
+            </b-col>
+            <b-col sm="9">
+              <b-form-file class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"
+                           placeholder="이미지를 선택하세요"></b-form-file>
+            </b-col>
+
+          </b-row>
+
+        </div>
+        <div v-else>
+          <b-col sm="12">
+            <b-img :src="image" fluid alt="Fluid image"/>
+          </b-col>
+        </div>
+        <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
+
+
+      </div>
+      <b-btn class="mt-3" variant="outline" block @click.stop="onSubmit">등록</b-btn>
+      <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">취소</b-btn>
+    </b-modal>
+
     <!-- Info modal -->
     <b-modal id="modalInfo" @hide="resetModal" :title="modalInfo.title" ok-only>
       <pre>{{ modalInfo.content }}</pre>
+    </b-modal>
+    <!-- Delete modal -->
+    <b-modal ref="deleteModal" hide-footer title="메뉴 삭제">
+      정말 삭제하시겠습니까?
+      <b-btn class="mt-3" variant="outline" block @click.stop="deleteProduct">삭제</b-btn>
+      <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">취소</b-btn>
+    </b-modal>
+    <!-- Update modal -->
+    <b-modal ref="updateModal" hide-footer title="메뉴 수정하기">
+      <div class="d-block text-center">
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="name" :for="name">메뉴 이름 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="text" v-model="name"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3"><label v-mode="price" :for="price">가격 :</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="number" v-model="price"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <span>재고 여부</span>
+          </b-col>
+          <b-col sm="9">
+            <b-form-group>
+              <b-form-radio-group id="radios" v-model="isActive" name="radios">
+                <b-form-radio value="true">재고 있음</b-form-radio>
+                <b-form-radio value="false">재고 없음</b-form-radio>
+              </b-form-radio-group>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <div v-if="!image">
+          <b-row class="my-1">
+
+            <b-col sm="3">
+              <label v-mode="image" :for="image">사진 :</label>
+            </b-col>
+            <b-col sm="9">
+              <b-form-file class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"
+                           placeholder="이미지를 선택하세요"></b-form-file>
+            </b-col>
+
+          </b-row>
+
+        </div>
+        <div v-else>
+          <b-col sm="12">
+            <b-img :src="image" fluid alt="Fluid image"/>
+          </b-col>
+        </div>
+        <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
+
+
+      </div>
+      <b-btn class="mt-3" variant="outline" block @click.stop="onSubmit">등록</b-btn>
+      <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">취소</b-btn>
     </b-modal>
     <!-- Add modal -->
     <b-modal ref="myModalRef" hide-footer title="메뉴 추가하기">
@@ -110,29 +217,32 @@
 import axios from 'axios';
 
 const items = [
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
-  { isActive: true, price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+  { price: 4000, name: '아메리카노' },
+
 
 ];
 
 export default {
-  name: 'Table',
+  name: 'Menu',
   data() {
     return {
       items,
+      id: '',
       name: '',
       price: '',
       image: '',
+      isActive: true,
       fields: [
         { key: 'name', label: '식단명', sortable: true, sortDirection: 'desc' },
         { key: 'price', label: '가격', sortable: true, class: 'text-center' },
-        { key: 'isActive', label: '판매여부' },
         { key: 'actions', label: 'Actions' },
       ],
       currentPage: 1,
@@ -159,10 +269,38 @@ export default {
     },
   },
   methods: {
-    info(item, index, button) {
-      this.modalInfo.title = `${index} 번째 메뉴`;
-      this.modalInfo.content = JSON.stringify(item, null, 2);
+    info(item, button) {
+      this.id = item.id;
+      this.name = item.name;
+      this.price = item.price;
       this.$root.$emit('bv::show::modal', 'modalInfo', button);
+    },
+    infos(item, button) {
+      this.id = item.id;
+      this.name = item.name;
+      this.price = item.price;
+      this.$refs.deleteModal.show();
+    },
+    updateProduct(item) {
+      this.id = item.id;
+      this.name = item.name;
+      this.price = item.price;
+      this.$refs.updateModal.show();
+    },
+    deleteProduct() {
+      alert();
+      console.log('11');
+      axios.delete('/api/products/delete', {
+        id: this.id,
+      }).then((response) => {
+        if (response.status === 200) {
+          alert('등록 완료');
+        } else if (response.status === 401) {
+          alert('입력 값을 확인하세요');
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
     },
     resetModal() {
       this.modalInfo.title = '';
@@ -176,26 +314,20 @@ export default {
     showAddModal() {
       this.name = '';
       this.price = '';
-      this.kcal = '';
-      this.mealDate = '';
       this.image = '';
       this.$refs.myModalRef.show();
     },
     hideAddModal() {
       this.name = '';
       this.price = '';
-      this.kcal = '';
-      this.mealDate = '';
       this.image = '';
       this.$refs.myModalRef.hide();
     },
     onSubmit() {
       console.log(this.name);
-      axios.post('/api/post', {
+      axios.post('/api/products/post', {
         name: this.name,
         price: this.price,
-        kcal: this.kcal,
-        mealDate: this.mealDate,
         image: this.image,
       }).then((response) => {
         if (response.status === 200) {

@@ -20,9 +20,9 @@
       </div>
       <div class="form-group">
         <label>생년월일</label>
-        <input type="date" class="form-control" v-model="birthDay"/>
-        <span v-show="errorMessage.birthDay!==''" class="validation_warn">
-          {{errorMessage.birthDay}}</span>
+        <input type="date" class="form-control" v-model="birthDate"/>
+        <span v-show="errorMessage.birthDate!==''" class="validation_warn">
+          {{errorMessage.birthDate}}</span>
       </div>
 
       <div class="form-group">
@@ -41,7 +41,7 @@ export default {
       email: '',
       password: '',
       name: '',
-      birthDay: '',
+      birthDate: '',
       errorMessage: Object,
     };
   },
@@ -68,10 +68,10 @@ export default {
       }
     },
     birthDay() {
-      if (this.birthDay.length < 6 || this.birthDay.length > 10) {
-        this.errorMessage.birthDay = '유효하지 않은 날짜 형식입니다.';
+      if (this.birthDate.length < 6 || this.birthDate.length > 10) {
+        this.errorMessage.birthDate = '유효하지 않은 날짜 형식입니다.';
       } else {
-        this.errorMessage.birthDay = '';
+        this.errorMessage.birthDate = '';
       }
     },
   },
@@ -92,10 +92,10 @@ export default {
       if (!this.validation()) {
         return;
       }
-      axios.post('/api/auth/signup', {
+      axios.post('http://192.168.0.33:8080/api/auth/signup', {
         email: this.email,
         name: this.name,
-        birthDay: this.birthDay,
+        birthDate: this.birthDate,
         password: this.password,
       }).then((response) => {
         if (response.status === 201) {
@@ -105,7 +105,7 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-  },
+    },
   },
 };
 </script>

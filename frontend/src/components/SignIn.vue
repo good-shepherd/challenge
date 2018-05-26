@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     onSubmit(email, password) {
-      axios.post('/api/auth/signin', {
+      axios.post('http://192.168.0.33:8080/api/auth/signin', {
         userEmail: this.email,
         password: this.password,
       }).then((response) => {
@@ -42,6 +42,9 @@ export default {
           alert('로그인 성공');
           this.$store.commit('setToken', response.data.accessToken);
           this.$store.dispatch('getUserInfo');
+          this.$router.push('Home');
+
+
         } else if (response.status === 401) {
           alert('회원 정보를 확인하세요.');
         }
