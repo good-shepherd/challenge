@@ -26,9 +26,17 @@ public class Product extends DateAudit {
     @Column(name = "product_price")
     private int productPrice;
 
+    @Column(name = "product_isonmenu")
+    private boolean isOnMenu = true;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Image> productImages = new HashSet<>();
 
     @OneToMany(mappedBy = "product")
     private Set<OrderProduct> orderProducts = new HashSet<>();
+
+    public Product(String productName, int productPrice) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+    }
 }

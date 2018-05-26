@@ -37,7 +37,7 @@ public class User extends DateAudit implements Serializable {
     private LocalDate userBirthdate;
 
     @Column(name = "user_point")
-    private int userPoint;
+    private int userPoint = 0;
 
     @Column(name = "user_confirmation_token")
     private String userConfirmationToken;

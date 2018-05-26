@@ -33,4 +33,9 @@ public class Image {
         this.imageLocation = imageLocation;
         this.post = post;
     }
+
+    public Image(String imageLocation, Product product) {
+        this.imageLocation = imageLocation;
+        this.product = product;
+    }
 }
