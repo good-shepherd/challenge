@@ -101,7 +101,6 @@
         <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
 
 
-
       </div>
       <b-btn class="mt-3" variant="outline" block @click.stop="onSubmit">등록</b-btn>
       <b-btn class="mt-3" variant="outline-danger" block @click.stop="hideAddModal">취소</b-btn>
@@ -165,7 +164,6 @@
           </b-col>
         </div>-
         <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
-
 
 
       </div>
@@ -297,7 +295,7 @@ export default {
       const token = localStorage.getItem('token');
       console.log(this.id);
       const auth = {
-        headers: { 'Authorization': 'Bearer '.concat(token) },
+        headers: { Authorization: 'Bearer '.concat(token) },
       };
       axios.delete('http://192.168.0.32:8080/api/products/'.concat(this.id), auth).then((response) => {
         if (response.status === 200) {
@@ -308,6 +306,7 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
+
       axios.get('http://192.168.0.32:8080/api/products?page='.concat(0).concat('&size=').concat(100), auth).then((response) => {
         console.log(response);
         this.items = response.data;
@@ -355,11 +354,11 @@ export default {
       console.log(token);
 
       const auth = {
-        headers: { 'Authorization': 'Bearer '.concat(token), 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { Authorization: 'Bearer '.concat(token), 'Content-Type': 'application/x-www-form-urlencoded' },
       };
       console.log(auth);
 
-      axios.post('http://192.168.0.32:8080/api/products', data, auth ).then((response) => {
+      axios.post('http://192.168.0.32:8080/api/products', data, auth).then((response) => {
         if (response.status === 200) {
           alert('등록 완료');
         } else if (response.status === 401) {
@@ -370,7 +369,7 @@ export default {
       });
       const data2 = new FormData();
       data2.append('image', this.image);
-      axios.post('http://192.168.0.32:8080/api/products/66', data, auth ).then((response) => {
+      axios.post('http://192.168.0.32:8080/api/products/66', data, auth).then((response) => {
         if (response.status === 200) {
           alert('등록 완료');
         } else if (response.status === 401) {
@@ -386,12 +385,12 @@ export default {
       const data = new FormData();
       data.append('name', this.name);
       data.append('price', this.price);
-      data.append('menu', this.menu)
+      data.append('menu', this.menu);
       // data.append('image', this.image);
       const token = localStorage.getItem('token');
       console.log(token);
       const auth = {
-        headers: { 'Authorization': 'Bearer '.concat(token) },
+        headers: { Authorization: 'Bearer '.concat(token) },
       };
       console.log(auth);
       axios.post('http://192.168.0.32:8080/api/products/'.concat(this.id), data, auth).then((response) => {

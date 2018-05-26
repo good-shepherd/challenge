@@ -61,9 +61,14 @@
     </b-row>
 
     <!-- Info modal -->
-    <b-modal id="modalInfo" @hide="resetModal" :title="modalInfo.title" ok-only>
-      <pre>{{ modalInfo.content }}</pre>
-
+    <b-modal id="modalInfo" @hide="resetModal" :title="modalInfo.title" >
+      <pre>회원정보수정</pre>
+      <b-row class="my-1">
+        <b-col sm="3"><label v-mode="point" :for="point">회원명 :</label></b-col>
+        <b-col sm="9">
+          {{this.name}}
+        </b-col>
+      </b-row>
       <b-row class="my-1">
         <b-col sm="3"><label v-mode="point" :for="point">포인트 :</label></b-col>
         <b-col sm="9">
@@ -76,7 +81,7 @@
           <b-form-select v-model="role" :options="options" class="mb-3" />
         </b-col>
       </b-row>
-
+      <b-btn class="mt-3" variant="outline" block @click.stop="onSubmit">완료</b-btn>
     </b-modal>
   </b-container>
 </template>
@@ -120,8 +125,8 @@ export default {
         { key: 'action', label: '수정하기' },
       ],
       options: [
-        { value: 'user', text: '회원' },
-        { value: 'admin', text: '관리자' },
+        { value: 'ROLE_USER', text: '회원' },
+        { value: 'ROLE_ADMIN', text: '관리자' },
       ],
       currentPage: 1,
       perPage: 10,
@@ -146,7 +151,6 @@ export default {
     info(item, button) {
       this.name = item.name;
       this.id = item.id;
-      this.birthDay = item.birthDay;
       this.point = item.point;
       this.email = item.email;
       this.role = item.role;
@@ -180,8 +184,8 @@ export default {
     },
     onSubmit() {
       console.log(this.name);
-      axios.post('/api/post', {
-        name: this.name,
+      axios.post('/api/users/'.concat(this.id), {
+        point: this.point,
         role: this.role,
       }).then((response) => {
         if (response.status === 200) {

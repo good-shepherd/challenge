@@ -9,6 +9,7 @@ import Check from '@/components/CheckEmail';
 import Menu from '@/components/Menu';
 import Order from '@/components/Order';
 import MyOrder from '@/components/MyOrder';
+import MonthlyOrder from '@/components/MonthlyOrder';
 import OrderManagement from '@/components/OrderManagement';
 
 Vue.use(Router);
@@ -54,6 +55,11 @@ export default new Router({
       path: '/myOrder',
       name: 'MyOrder',
       component: MyOrder,
+    },
+    {
+      path: '/monthlyOrder',
+      name: 'MonthlyOrder',
+      component: MonthlyOrder,
     },
     {
       path: '/orderManagement',

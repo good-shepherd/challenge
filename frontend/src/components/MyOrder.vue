@@ -1,23 +1,11 @@
 <template>
   <b-container fluid>
     <!-- User Interface controls -->
-    <b-row>
-      <b-col md="6" class="my-1">
-        <b-form-group horizontal label="" class="mb-0">
-          <b-input-group>
-            <b-form-input v-model="filter" placeholder="검색어를 입력하세요"/>
-            <b-input-group-append>
-              <b-btn :disabled="!filter" @click="filter = ''">초기화</b-btn>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-    </b-row>
+
 
     <b-table show-empty
              stacked="md"
              :items="items"
-             :fields="fields"
              :current-page="currentPage"
              :per-page="perPage"
 

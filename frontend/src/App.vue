@@ -15,6 +15,11 @@
           <router-link to="myOrder">나의 예약</router-link>
         </a>
       </div>
+      <div v-if="this.$store.state.token !== 0">
+        <a href="#">
+          <router-link to="monthlyOrder">월별 예약</router-link>
+        </a>
+      </div>
       <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
         <a href="#">
           <router-link to="orderManagement">예약 관리</router-link>
