@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,9 +37,15 @@ public class ProductService {
     public void uploadProduct(ProductRequest productRequest, UserPrincipal userPrincipal) {
         // a person who adds the item...
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        System.out.println("image name: " + productRequest.getImage().getOriginalFilename());
         Product product = new Product(productRequest.getName(), productRequest.getPrice());
+        System.out.println("before: " + product.getProductImages().size());
+        if (productRequest.getImage() != null) {
+            product = addImageToProduct(product, productRequest);
+        }
+        System.out.println("after: " + product.getProductImages().size());
         log.info("Saving - " + product.getProductName());
-        productRepository.save(addImageToProduct(product, productRequest));
+        productRepository.save(product);
     }
 
     @Transactional
@@ -56,7 +63,7 @@ public class ProductService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException());
         log.info("Saving - " + product.getProductName());
-        product = addImageToProduct(product, productRequest);
+        //product = addImageToProduct(product, productRequest);
         product.setProductName(productRequest.getName());
         product.setProductPrice(productRequest.getPrice());
         product.setOnMenu(productRequest.isMenu());
@@ -69,13 +76,29 @@ public class ProductService {
         return response;
     }
 
-    public Page<Product> findAllProduct(Pageable pageable) {
+    public List<ProductResponse> findAllProduct(Pageable pageable) {
         Page<Product> page = productRepository.findAll(pageable);
-        return page;
+        List<Product> list = page.getContent();
+        List<ProductResponse> res = new ArrayList<>();
+        list.forEach(o -> res.add(productToResponse(o)));
+        return res;
+    }
+
+    public List<ProductResponse> getMenu(Pageable pageable) {
+        List<ProductResponse> res = findAllProduct(pageable);
+        List<ProductResponse> list = new ArrayList<>();
+        for (ProductResponse response : res) {
+            if (response.isMenu()) {
+                list.add(response);
+            }
+        }
+        return list;
     }
 
     private ProductResponse productToResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(product.getId());
+        productResponse.setMenu(product.isOnMenu());
         productResponse.setName(product.getProductName());
         productResponse.setPrice(product.getProductPrice());
         productResponse.setCreatedDate(product.getCreatedDate());
@@ -91,12 +114,12 @@ public class ProductService {
     }
 
     private Product addImageToProduct(Product product, ProductRequest productRequest) {
-        if (productRequest.getImage() != null) {
-            List<String> uploadedFiles = uploadUtils.saveFiles(productRequest.getImage());
-            Set<Image> images = new HashSet<>();
-            uploadedFiles.forEach(o -> images.add(new Image(o, product)));
-            product.setProductImages(images);
-        }
+        List<MultipartFile> l = new ArrayList<>();
+        l.add(productRequest.getImage());
+        List<String> uploadedFiles = uploadUtils.saveFiles(l);
+        Set<Image> images = new HashSet<>();
+        uploadedFiles.forEach(o -> images.add(new Image(o, product)));
+        product.setProductImages(images);
         return product;
     }
 
