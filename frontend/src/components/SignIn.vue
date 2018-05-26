@@ -25,7 +25,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'sign-in',
+  name: 'order',
   data() {
     return {
       email: '',
@@ -33,8 +33,13 @@ export default {
     };
   },
   methods: {
+    created() {
+      // this.items = axios.get('api/userList').then(function (response) {
+      //
+      // });
+    },
     onSubmit(email, password) {
-      axios.post('http://192.168.0.33:8080/api/auth/signin', {
+      axios.post('http://192.168.0.32:8080/api/auth/signin', {
         userEmail: this.email,
         password: this.password,
       }).then((response) => {
@@ -42,7 +47,7 @@ export default {
           alert('로그인 성공');
           this.$store.commit('setToken', response.data.accessToken);
           this.$store.dispatch('getUserInfo');
-          this.$router.push('Home');
+          this.$router.push('/');
 
 
         } else if (response.status === 401) {

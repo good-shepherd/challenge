@@ -3,15 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 
 Vue.use(Vuex);
-let initialState = {
-  token: 0,
-  id: 0,
-  name: '',
-  email: '',
-  role: '',
-}
 
-const state = Vue.util.extend({}, initialState)
 const store = new Vuex.Store({
   state: {
     token: 0,
@@ -23,24 +15,25 @@ const store = new Vuex.Store({
   mutations: {
     setToken(state, payload) {
       state.token = payload;
+      localStorage.setItem('token', state.token);
     },
     setUser(state, payload) {
       state.id = payload.id;
       state.username = payload.name;
       state.email = payload.email;
       state.role = payload.role;
-
     },
-    LOGOUT (state) {
+    LOGOUT(state) {
       // 토큰 정보 삭제
       state.token = 0;
+      localStorage.clear();
     },
   },
   actions: {
-    LOGOUT ({commit}) {
+    LOGOUT({ commit }) {
       // HTTP 요청 헤더값 제거
-      axios.defaults.headers.common['Authorization'] = undefined
-      commit('LOGOUT')
+      axios.defaults.headers.common.Authorization = undefined;
+      commit('LOGOUT');
     },
     clear(state) {
       state.token = 0;
@@ -50,11 +43,11 @@ const store = new Vuex.Store({
       state.role = '';
     },
     getUserInfo({ commit, state }) {
-      axios.get('/api/users/me', {
-        headers: {
-          Authorization: `Bearer ${state.token}`,
-        },
-      }).then((response) => {
+
+      const auth = {
+        headers: {Authorization:'Bearer ' + state.token}
+      }
+      axios.get('http://192.168.0.32:8080/api/users/me', auth).then((response) => {
         console.log(response);
         commit('setUser', response.data);
       });

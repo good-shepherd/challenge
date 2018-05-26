@@ -92,7 +92,7 @@ export default {
       if (!this.validation()) {
         return;
       }
-      axios.post('http://192.168.0.33:8080/api/auth/signup', {
+      axios.post('http://192.168.0.32:8080/api/auth/signup', {
         email: this.email,
         name: this.name,
         birthDate: this.birthDate,

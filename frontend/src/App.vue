@@ -4,12 +4,22 @@
       <a href="#">
         <router-link to="/">Midas Cafe</router-link>
       </a>
-      <div v-if="this.$store.state.token !== 0">
+      <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
         <a href="#">
           <router-link to="menu">메뉴관리</router-link>
         </a>
       </div>
       <div v-if="this.$store.state.token !== 0">
+        <a href="#">
+          <router-link to="order">예약 주문</router-link>
+        </a>
+      </div>
+      <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
+        <a href="#">
+          <router-link to="orderManagement">예약 관리</router-link>
+        </a>
+      </div>
+      <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
         <a href="#">
           <router-link to="users">회원관리</router-link>
         </a>
@@ -30,6 +40,7 @@
         <router-link to="signup">가입하기</router-link>
       </a>
       </div>
+
     </nav>
     <div class="main">
       <router-view/>
@@ -119,7 +130,6 @@ export default {
   }
 
   .main {
-    margin-left: 200px; /* Same as the width of the sidenav */
     padding: 20px;
   }
 

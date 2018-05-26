@@ -1,5 +1,7 @@
 <template>
   <b-container fluid>
+    <b-row>
+    </b-row>
     <!-- User Interface controls -->
     <b-row>
       <b-col md="6" class="my-1">
@@ -82,20 +84,22 @@
 <script>
 import axios from 'axios';
 
-const items = [
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-  { id: 111, point: 4000, name: '김김김', birthDay: '2000-11-11', role: 'user' },
-];
+
+const items = [];
 
 export default {
   created() {
-    // this.items = axios.get('api/userList').then(function (response) {
-    //
-    // });
+    const token = localStorage.getItem('token');
+    console.log(token);
+    const auth = {
+      headers: { Authorization: 'Bearer '.concat(token) },
+    };
+    console.log(auth);
+    axios.get('http://192.168.0.32:8080/api/users?page='.concat(0).concat('&size=').concat(100), auth).then((response) => {
+      console.log(response);
+      this.items = response.data;
+    });
+    console.log(this.items);
   },
   name: 'Users',
   data() {
@@ -108,11 +112,10 @@ export default {
       email: '',
       point: '',
       fields: [
-        { key: 'id', label: '회원번호', sortable: true, sortDirection: 'desc' },
         { key: 'name', label: '이름', sortable: true, sortDirection: 'desc' },
         { key: 'role', label: '역할', sortable: true, class: 'text-center' },
         { key: 'email', label: '이메일', sortable: true, class: 'text-center' },
-        { key: 'birthDay', label: '생일', sortable: true, class: 'text-center' },
+        { key: 'birthdate', label: '생일', sortable: true, class: 'text-center' },
         { key: 'point', label: '포인트', sortable: true },
         { key: 'action', label: '수정하기' },
       ],

@@ -7,6 +7,8 @@ import Home from '@/components/Home';
 import Users from '@/components/Users';
 import Check from '@/components/CheckEmail';
 import Menu from '@/components/Menu';
+import Order from '@/components/Order';
+import OrderManagement from '@/components/OrderManagement';
 
 Vue.use(Router);
 export default new Router({
@@ -41,6 +43,16 @@ export default new Router({
       path: '/check',
       name: 'Check',
       component: Check,
+    },
+    {
+      path: '/order',
+      name: 'Order',
+      component: Order,
+    },
+    {
+      path: '/orderManagement',
+      name: 'OrderManagement',
+      component: OrderManagement,
     },
     {
       path: '/signOut',
