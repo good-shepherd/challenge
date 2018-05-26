@@ -7,7 +7,6 @@ import com.midasit.challenge.payloads.UserResponse;
 import com.midasit.challenge.payloads.UserUpdateRequest;
 import com.midasit.challenge.repositories.RoleRepository;
 import com.midasit.challenge.repositories.UserRepository;
-import com.midasit.challenge.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,9 +38,12 @@ public class UserService {
         return response;
     }
 
-    public Page<User> findAllUser(Pageable pageable) {
+    public List<UserResponse> findAllUser(Pageable pageable) {
         Page<User> page = userRepository.findAll(pageable);
-        return page;
+        List<User> list = page.getContent();
+        List<UserResponse> res = new ArrayList<>();
+        list.forEach(o -> res.add(userToResponse(o)));
+        return res;
     }
 
     @Transactional
@@ -62,7 +64,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserByAdmin(UserUpdateRequest request, Long id) {
+    public void updateUserByAdmin(UserUpdateRequest request, Long id, Long adminId) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         user.setUserName(request.getName());
         user.setUserBirthdate(LocalDate.parse(request.getBirthdate()));
@@ -71,7 +73,20 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, Long adminId) {
         userRepository.deleteById(id);
+    }
+
+    private List<String> getRoleStrings(User user) {
+        Set<Role> roles = user.getRoles();
+        List<String> sroles = new ArrayList<>();
+        roles.forEach(o -> sroles.add(o.getName().toString()));
+        return sroles;
+    }
+
+    private UserResponse userToResponse(User user) {
+        UserResponse res = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(),
+                getRoleStrings(user).get(0), user.getCreatedDate(), user.getUpdatedDate());
+        return res;
     }
 }

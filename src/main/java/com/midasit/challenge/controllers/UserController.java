@@ -9,11 +9,12 @@ import com.midasit.challenge.security.UserPrincipal;
 import com.midasit.challenge.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @AllArgsConstructor
@@ -36,15 +37,15 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
-    public Page<User> getAllUser() {
-        Pageable pageable = PageRequest.of(0, 10);
+    public List<UserResponse> getAllUser(@RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return userService.findAllUser(pageable);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
-    public void updateUserByAdmin(UserUpdateRequest request, @PathVariable Long id) {
-        userService.updateUserByAdmin(request, id);
+    public void updateUserByAdmin(UserUpdateRequest request, @PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
+        userService.updateUserByAdmin(request, id, userPrincipal.getId());
     }
 
     @PutMapping("/me")
@@ -54,9 +55,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MAST                                                                                                                                                  ER')")
-    public void deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
+    public void deleteUser(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
+        userService.deleteUser(id, userPrincipal.getId());
     }
 
 }

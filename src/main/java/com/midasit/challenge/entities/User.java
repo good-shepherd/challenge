@@ -16,7 +16,7 @@ import java.util.Set;
 @ToString(exclude = "userPassword")
 @Table(name = "users")
 @Entity
-public class User extends DateAudit implements Serializable {
+public class User extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
