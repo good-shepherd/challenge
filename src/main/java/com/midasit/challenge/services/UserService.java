@@ -7,6 +7,7 @@ import com.midasit.challenge.payloads.UserResponse;
 import com.midasit.challenge.payloads.UserUpdateRequest;
 import com.midasit.challenge.repositories.RoleRepository;
 import com.midasit.challenge.repositories.UserRepository;
+import com.midasit.challenge.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -29,9 +32,9 @@ public class UserService {
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         Set<Role> roles = user.getRoles();
-        String[] a = {};
-        roles.toArray(a);
-        UserResponse response = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(), a[0],
+        List<String> sroles = new ArrayList<>();
+        roles.forEach(o -> sroles.add(o.getName().toString()));
+        UserResponse response = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(), sroles.get(0),
                 user.getCreatedDate(), user.getUpdatedDate());
         return response;
     }
@@ -50,8 +53,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserByHimself(UserUpdateRequest request) { //name, date
-        User user = userRepository.findByUserEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException());
+    public void updateUserByHimself(UserUpdateRequest request, Long id) { //name, date
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         user.setUserName(request.getName());
         // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // "1990-08-22" redundant
         user.setUserBirthdate(LocalDate.parse(request.getBirthdate()));
@@ -59,8 +62,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserByAdmin(UserUpdateRequest request) {
-        User user = userRepository.findByUserEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException());
+    public void updateUserByAdmin(UserUpdateRequest request, Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         user.setUserName(request.getName());
         user.setUserBirthdate(LocalDate.parse(request.getBirthdate()));
         user.setUserEmail(request.getEmail());
