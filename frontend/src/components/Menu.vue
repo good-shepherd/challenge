@@ -218,7 +218,7 @@
 
 <script>
 import axios from 'axios';
-
+import Jquery from 'jquery';
 const items = [];
 export default {
   created() {
@@ -355,11 +355,23 @@ export default {
       console.log(token);
 
       const auth = {
-        headers: { 'Authorization': 'Bearer '.concat(token), 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 'Authorization': 'Bearer '.concat(token),
+          /*'Content-Type': 'application/x-www-form-urlencoded' */},
       };
       console.log(auth);
 
-      axios.post('http://192.168.0.32:8080/api/products', data, auth ).then((response) => {
+      /*axios.post('http://192.168.0.32:8080/api/products', data, auth ).then((response) => {
+        if (response.status === 200) {
+          alert('등록 완료');
+        } else if (response.status === 401) {
+          alert('입력 값을 확인하세요');
+        }
+      }).catch((error) => {
+        console.log(error);
+      });*/
+      let data2 = new FormData();
+      data2.append('files', this.image);
+      axios.post('http://192.168.0.32:8080/api/products/66', data2, auth).then((response) => {
         if (response.status === 200) {
           alert('등록 완료');
         } else if (response.status === 401) {
@@ -368,17 +380,28 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-      const data2 = new FormData();
-      data2.append('image', this.image);
-      axios.post('http://192.168.0.32:8080/api/products/66', data, auth ).then((response) => {
-        if (response.status === 200) {
-          alert('등록 완료');
-        } else if (response.status === 401) {
-          alert('입력 값을 확인하세요');
+
+      /*Jquery.ajax({
+        url: 'http://192.168.0.32:8080/api/products/66',
+        data: data2,
+        type: 'POST',
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMiIsImlhdCI6MTUyNzM0NTQzMCwiZXhwIjoxNTI3NDMxODMwfQ.KQ3MyHCP2lCwcFbmQpvgzQ3w8_-nq9FglIYNMK7vZZSC5YOQIc3ZBZ9Fs1lTq246UDR45L4omXaDSvj8JhYfYA');
+          //xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+        },
+        contentType: false,
+        processData: false,
+        success: function (d) {
+          alert(d);
         }
-      }).catch((error) => {
-        console.log(error);
-      });
+      });*/
+
+      /*this.$http.post('http://192.168.0.32:8080/api/products/66', data2, {
+        headers: {
+          'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMiIsImlhdCI6MTUyNzM0NTQzMCwiZXhwIjoxNTI3NDMxODMwfQ.KQ3MyHCP2lCwcFbmQpvgzQ3w8_-nq9FglIYNMK7vZZSC5YOQIc3ZBZ9Fs1lTq246UDR45L4omXaDSvj8JhYfYA',
+          'Content-Type': 'multipart/form-data'
+        }
+      })*/
 
       this.hideAddModal();
     },

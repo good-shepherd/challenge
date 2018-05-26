@@ -3,7 +3,6 @@ package com.midasit.challenge.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 @ToString
 @Table(name = "posts")
 @Entity
-public class Post extends DateAudit implements Serializable {
+public class Post extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

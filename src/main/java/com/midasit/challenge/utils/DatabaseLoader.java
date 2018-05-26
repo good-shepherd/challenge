@@ -7,6 +7,7 @@ import com.midasit.challenge.exceptions.AppException;
 import com.midasit.challenge.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -26,21 +27,20 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*roleRepository.deleteAll();
-        roleRepository.save(new Role(RoleName.ROLE_UNCONFIRMED));
-        roleRepository.save(new Role(RoleName.ROLE_USER));
-        roleRepository.save(new Role(RoleName.ROLE_ADMIN));
-        roleRepository.save(new Role(RoleName.ROLE_MASTER));*/
+        //roleRepository.deleteAll();
+        //roleRepository.save(new Role(RoleName.ROLE_UNCONFIRMED));
+       // roleRepository.save(new Role(RoleName.ROLE_USER));
+        //roleRepository.save(new Role(RoleName.ROLE_ADMIN));
+        //roleRepository.save(new Role(RoleName.ROLE_MASTER));
         // relationshipRepository.deleteAll();
         //userRepository.deleteAll();
         // postRepository.deleteAll();
-        /*User supUser = new User("master@fakemail.com", "1234567",
-                "superuser", LocalDate.of(1990, 9, 29));*/
-        /*Role userRole = roleRepository.findByName(RoleName.ROLE_MASTER).get();
-
-        supUser.setRoles(Collections.singleton(userRole));*/
+       // User supUser = new User("master@fakemail.com", "1234567",
+          //      "superuser", LocalDate.of(1990, 9, 29));
+        //Role userRole = roleRepository.findByName(RoleName.ROLE_MASTER).orElseThrow(()->new ResourceNotFoundException());
+       // supUser.setRoles(Collections.singleton(userRole));
         //System.out.println(supUser.getRoles().toString());
-        // userRepository.save(supUser);
+        //userRepository.save(supUser);
 
     }
 }
