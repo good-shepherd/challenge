@@ -187,26 +187,26 @@
             <b-form-input type="number" v-model="price"></b-form-input>
           </b-col>
         </b-row>
-        <!--<div v-if="!image">-->
-          <!--<b-row class="my-1">-->
+        <div v-if="!image">
+          <b-row class="my-1">
 
-            <!--<b-col sm="3">-->
-              <!--<label v-mode="image" :for="image">사진 :</label>-->
-            <!--</b-col>-->
-            <!--<b-col sm="9">-->
-              <!--<b-form-file enctype="multipart/form-data" class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"-->
-                           <!--placeholder="이미지를 선택하세요"></b-form-file>-->
-            <!--</b-col>-->
+            <b-col sm="3">
+              <label v-mode="image" :for="image">사진 :</label>
+            </b-col>
+            <b-col sm="9">
+              <b-form-file enctype="multipart/form-data" class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"
+                           placeholder="이미지를 선택하세요"></b-form-file>
+            </b-col>
 
-          <!--</b-row>-->
+          </b-row>
 
-        <!--</div>-->
-        <!--<div v-else>-->
-          <!--<b-col sm="12">-->
-            <!--<b-img :src="image" fluid alt="Fluid image"/>-->
-          <!--</b-col>-->
-        <!--</div>-->
-        <!--<b-btn class="mt-auto" @click="removeImage">초기화</b-btn>-->
+        </div>
+        <div v-else>
+          <b-col sm="12">
+            <b-img :src="image" fluid alt="Fluid image"/>
+          </b-col>
+        </div>
+        <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
 
 
       </div>
