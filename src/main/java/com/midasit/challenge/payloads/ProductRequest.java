@@ -18,6 +18,8 @@ public class ProductRequest {
 
     private int price;
 
+    private boolean menu;
+
     @JsonIgnore
     private List<MultipartFile> image = new ArrayList<>();
 
