@@ -3,8 +3,9 @@ import Router from 'vue-router';
 import SignUp from '@/components/SignUp';
 import SignIn from '@/components/SignIn';
 import HelloWorld from '@/components/HelloWorld';
-import Blog from '@/components/Blog';
-import Meal from '@/components/Meal';
+import Users from '@/components/Users';
+import Check from '@/components/CheckEmail';
+import Menu from '@/components/Menu';
 
 Vue.use(Router);
 export default new Router({
@@ -26,14 +27,19 @@ export default new Router({
       component: SignIn,
     },
     {
-      path: '/blog',
-      name: 'Blog',
-      component: Blog,
+      path: '/menu',
+      name: 'Menu',
+      component: Menu,
     },
     {
-      path: '/meal',
-      name: 'Meal',
-      component: Meal,
+      path: '/users',
+      name: 'Users',
+      component: Users,
+    },
+    {
+      path: '/check',
+      name: 'Check',
+      component: Check,
     },
   ],
 });

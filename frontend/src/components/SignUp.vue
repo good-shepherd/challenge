@@ -3,17 +3,28 @@
     <img src="@/assets/logo.png"/>
     <div id="signup-box">
       <div class="form-group">
-        <label>email</label>
+        <label>이름</label>
+        <input type="text" class="form-control" v-model="name"/>
+      </div>
+      <div class="form-group">
+        <label>이메일</label>
         <input class="form-control" v-model="email"/>
         <span v-show="errorMessage.email!==''" class="validation_warn">
           {{errorMessage.email}}</span>
       </div>
       <div class="form-group">
-        <label>password</label>
+        <label>비밀번호</label>
         <input type="password" class="form-control" v-model="password"/>
         <span v-show="errorMessage.password!==''" class="validation_warn">
           {{errorMessage.password}}</span>
       </div>
+      <div class="form-group">
+        <label>생년월일</label>
+        <input type="date" class="form-control" v-model="birthDay"/>
+        <span v-show="errorMessage.birthDay!==''" class="validation_warn">
+          {{errorMessage.birthDay}}</span>
+      </div>
+
       <div class="form-group">
         <button class="btn btn-default" @click="_signUp">가입</button>
       </div>
@@ -29,6 +40,8 @@ export default {
     return {
       email: '',
       password: '',
+      name: '',
+      birthDay: '',
       errorMessage: Object,
     };
   },
@@ -54,6 +67,13 @@ export default {
         this.errorMessage.password = '';
       }
     },
+    birthDay() {
+      if (this.birthDay.length < 6 || this.birthDay.length > 10) {
+        this.errorMessage.birthDay = '유효하지 않은 날짜 형식입니다.';
+      } else {
+        this.errorMessage.birthDay = '';
+      }
+    },
   },
   methods: {
     validation() {
@@ -62,7 +82,7 @@ export default {
         alert('유효성 검사를 진행하세요.');
         return false;
       }
-      if (this.username.length === 0 || this.password.length === 0 || this.email.length === 0) {
+      if (this.name.length === 0 || this.password.length === 0 || this.email.length === 0) {
         alert('form을 채워주세요.');
         return false;
       }
@@ -74,16 +94,18 @@ export default {
       }
       axios.post('/api/auth/signup', {
         email: this.email,
+        name: this.name,
+        birthDay: this.birthDay,
         password: this.password,
       }).then((response) => {
         if (response.status === 201) {
           alert('회원가입 성공');
-          this.$router.push('signin');
+          this.$router.push('check');
         }
       }).catch((error) => {
         console.log(error);
       });
-    },
+  },
   },
 };
 </script>

@@ -46,16 +46,6 @@
         <b-button size="sm" @click.stop="info(row.item, row.index, $event.target)" class="mr-1">
           자세히보기
         </b-button>
-        <b-button size="sm" @click.stop="row.toggleDetails">
-          {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
-        </b-button>
-      </template>
-      <template slot="row-details" slot-scope="row">
-        <b-card>
-          <ul>
-            <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value}}</li>
-          </ul>
-        </b-card>
       </template>
     </b-table>
 
@@ -64,7 +54,7 @@
         <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0"/>
       </b-col>
       <b-col md="6" class="my-1">
-        <b-btn @click.stop="showAddModal" variant="primary">식단 추가하기</b-btn>
+        <b-btn @click.stop="showAddModal" variant="primary">메뉴 추가하기</b-btn>
       </b-col>
     </b-row>
 
@@ -73,10 +63,10 @@
       <pre>{{ modalInfo.content }}</pre>
     </b-modal>
     <!-- Add modal -->
-    <b-modal ref="myModalRef" hide-footer title="식단 추가하기">
+    <b-modal ref="myModalRef" hide-footer title="메뉴 추가하기">
       <div class="d-block text-center">
         <b-row class="my-1">
-          <b-col sm="3"><label v-mode="name" :for="name">식단명 :</label></b-col>
+          <b-col sm="3"><label v-mode="name" :for="name">메뉴 이름 :</label></b-col>
           <b-col sm="9">
             <b-form-input type="text" v-model="name"></b-form-input>
           </b-col>
@@ -87,19 +77,6 @@
             <b-form-input type="number" v-model="price"></b-form-input>
           </b-col>
         </b-row>
-        <b-row class="my-1">
-          <b-col sm="3"><label v-mode="kcal" :for="kcal">열량 :</label></b-col>
-          <b-col sm="9">
-            <b-form-input :id="kcal" type="number" v-model="kcal"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3"><label v-mode="mealDate" :for="mealDate">식단 날짜 :</label></b-col>
-          <b-col sm="9">
-            <b-form-input :id="mealDate" type="date" v-model="mealDate"></b-form-input>
-          </b-col>
-        </b-row>
-
         <div v-if="!image">
           <b-row class="my-1">
 
@@ -133,17 +110,14 @@
 import axios from 'axios';
 
 const items = [
-  { isActive: true, price: 4000, kcal: 100, name: '짜장면' },
-  { isActive: false, price: 5000, kcal: 200, name: '짬뽕' },
-  { isActive: true, price: 12000, kcal: 300, name: '탕수육' },
-  { isActive: false, price: 20000, kcal: 400, name: '라조기' },
-  { isActive: true, price: 5500, kcal: 500, name: '울면' },
-  { isActive: true, price: 15000, kcal: 600, name: '꿔바로우' },
-  { isActive: false, price: 6000, kcal: 700, name: '소룡포' },
-  { isActive: true, price: 300000, kcal: 800, name: '개구리다리튀김' },
-  { isActive: true, price: 40000, kcal: 900, name: '라조육' },
-  { isActive: false, price: 7000, kcal: 1000, name: '삼선짜장' },
-  { isActive: true, price: 8000, kcal: 1100, name: '사천짜장' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
+  { isActive: true, price: 4000, name: '아메리카노' },
 
 ];
 
@@ -154,13 +128,10 @@ export default {
       items,
       name: '',
       price: '',
-      kcal: '',
-      mealDate: '',
       image: '',
       fields: [
         { key: 'name', label: '식단명', sortable: true, sortDirection: 'desc' },
         { key: 'price', label: '가격', sortable: true, class: 'text-center' },
-        { key: 'kcal', label: '칼로리', sortable: true, class: 'text-center' },
         { key: 'isActive', label: '판매여부' },
         { key: 'actions', label: 'Actions' },
       ],
@@ -175,8 +146,6 @@ export default {
       modalInfo: { title: '', content: '' },
       types: [{ key: 'name', type: 'text' },
         { key: 'price', type: 'text' },
-        { key: 'kcal', type: 'text' },
-        { key: 'mealDate', type: 'date' },
 
       ],
     };

@@ -5,10 +5,10 @@
         <router-link to="/">Midas</router-link>
       </a>
       <a href="#">
-        <router-link to="blog">블로그</router-link>
+        <router-link to="menu">메뉴관리</router-link>
       </a>
       <a href="#">
-        <router-link to="meal">식단표</router-link>
+        <router-link to="users">회원관리</router-link>
       </a>
       <div>
         <a href="#">

@@ -2,22 +2,26 @@
   <div id="signin">
     <img src="@/assets/logo.png"/>
     <div id="signin-box">
-      <div class="form-group">
-        <label>email</label>
-        <input class="form-control" v-model="email"/>
-      </div>
-      <div class="form-group">
-        <label>password</label>
-        <input type="password" class="form-control" v-model="password"/>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-default" @click="_signIn">로그인</button>
-      </div>
+      <form @submit.prevent="onSubmit(email, password)">
+        <div>
+          <input type="text" v-model="email" placeholder="Email Address">
+
+        </div>
+        <div>
+          <input type="password" v-model="password" placeholder="Password">
+
+        </div>
+        <div>
+          <input type="submit" value="Login">
+
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+
 import axios from 'axios';
 
 export default {
@@ -29,7 +33,7 @@ export default {
     };
   },
   methods: {
-    _signIn() {
+    onSubmit(email, password) {
       axios.post('/api/auth/signin', {
         userEmail: this.email,
         password: this.password,

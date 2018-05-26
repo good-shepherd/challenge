@@ -8,8 +8,9 @@ const store = new Vuex.Store({
   state: {
     token: 0,
     id: 0,
-    username: '',
-    useremail: '',
+    name: '',
+    email: '',
+    role: '',
   },
   mutations: {
     setToken(state, payload) {
@@ -17,8 +18,8 @@ const store = new Vuex.Store({
     },
     setUser(state, payload) {
       state.id = payload.id;
-      state.username = payload.username;
-      state.useremail = payload.useremail;
+      state.username = payload.name;
+      state.email = payload.email;
     },
   },
   actions: {
