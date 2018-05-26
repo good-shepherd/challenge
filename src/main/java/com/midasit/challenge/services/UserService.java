@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -27,14 +28,19 @@ public class UserService {
 
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
-        UserResponse response = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(),
+        Set<Role> roles = user.getRoles();
+        String[] a = {};
+        roles.toArray(a);
+        UserResponse response = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(), a[0],
                 user.getCreatedDate(), user.getUpdatedDate());
         return response;
     }
+
     public Page<User> findAllUser(Pageable pageable) {
         Page<User> page = userRepository.findAll(pageable);
         return page;
     }
+
     @Transactional
     public void updateRoleById(Long userId, RoleName roleName) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException());
@@ -42,6 +48,7 @@ public class UserService {
         user.setRoles(Collections.singleton(role));
         userRepository.save(user);
     }
+
     @Transactional
     public void updateUserByHimself(UserUpdateRequest request) { //name, date
         User user = userRepository.findByUserEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException());

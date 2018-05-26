@@ -15,6 +15,7 @@ public class UserResponse {
     private String name;
     private LocalDate birthdate;
     private int point;
+    private String role;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 }
