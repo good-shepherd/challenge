@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -92,11 +93,12 @@ public class AuthController {
 
         // need to fix the URL below
         registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
-                + request.getScheme() + "://" + request.getServerName() + ":8080/confirm?t=" + user.getUserConfirmationToken());
+                + request.getScheme() + "://" + request.getServerName() + ":8080/api/auth/confirm?t=" + user.getUserConfirmationToken());
         emailService.sendEmail(registrationEmail);
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully. Check your email and confirm it."));
     }
 
+    // http://192.168.0.32:8080/confirm?t=5650cac0-9859-49b4-b296-16eac29e60fe
     @GetMapping("/confirm")
     @Transactional
     public ResponseEntity<ApiResponse> confirmUser(@RequestParam("t") String token) {

@@ -21,6 +21,6 @@ public class UserController {
 
     public UserResponse getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
 
-        return new UserResponse()
-        }
+        return null;
+    }
 }
