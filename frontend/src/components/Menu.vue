@@ -79,7 +79,7 @@
             <b-form-input type="number" v-model="price"></b-form-input>
           </b-col>
         </b-row>
-        <!--<div v-if="!image">
+        <div v-if="!image">
           <b-row class="my-1">
 
             <b-col sm="3">
@@ -97,10 +97,9 @@
           <b-col sm="12">
             <b-img :src="image" fluid alt="Fluid image"/>
           </b-col>
-        </div>-->
-<!--
+        </div>
         <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
--->
+
 
 
       </div>
@@ -146,7 +145,7 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <!--<div v-if="!image">
+        <div v-if="!image">
           <b-row class="my-1">
 
             <b-col sm="3">
@@ -164,10 +163,9 @@
           <b-col sm="12">
             <b-img :src="image" fluid alt="Fluid image"/>
           </b-col>
-        </div>-->
-<!--
+        </div>-
         <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
--->
+
 
 
       </div>
@@ -370,17 +368,17 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-      // const data2 = new FormData();
-      // data2.append('image', this.image);
-      // axios.post('http://192.168.0.32:8080/api/products/66', data, auth ).then((response) => {
-      //   if (response.status === 200) {
-      //     alert('등록 완료');
-      //   } else if (response.status === 401) {
-      //     alert('입력 값을 확인하세요');
-      //   }
-      // }).catch((error) => {
-      //   console.log(error);
-      // });
+      const data2 = new FormData();
+      data2.append('image', this.image);
+      axios.post('http://192.168.0.32:8080/api/products/66', data, auth ).then((response) => {
+        if (response.status === 200) {
+          alert('등록 완료');
+        } else if (response.status === 401) {
+          alert('입력 값을 확인하세요');
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
 
       this.hideAddModal();
     },
