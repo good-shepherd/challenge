@@ -32,6 +32,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.*;
 
+@CrossOrigin
 @AllArgsConstructor
 @RestController
 @Slf4j
@@ -64,12 +65,8 @@ public class AuthController {
         if (userRepository.existsByUserEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address is already taken!"), HttpStatus.BAD_REQUEST);
         }
-        StringTokenizer st = new StringTokenizer(signUpRequest.getBirthdate(), "-");
-        int year = Integer.parseInt(st.nextToken());
-        int month = Integer.parseInt(st.nextToken());
-        int day = Integer.parseInt(st.nextToken());
         User user = new User(signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getName(), LocalDate.of(year, month, day));
+                signUpRequest.getName(), LocalDate.parse(signUpRequest.getBirthDate()));
         /*switch (signUpRequest.getRole()) {
             case 1:
                 role = RoleName.ROLE_USER;

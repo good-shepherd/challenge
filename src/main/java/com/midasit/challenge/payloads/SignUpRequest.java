@@ -23,7 +23,7 @@ public class SignUpRequest {
 
     private String name;
 
-    private String birthdate; // "1990-08-22"
+    private String birthDate; // "1990-08-22"
 
     private int role;
 }
