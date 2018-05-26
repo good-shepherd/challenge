@@ -1,7 +1,6 @@
 package com.midasit.challenge.controllers;
 
 
-import com.midasit.challenge.entities.User;
 import com.midasit.challenge.payloads.UserResponse;
 import com.midasit.challenge.payloads.UserUpdateRequest;
 import com.midasit.challenge.security.CurrentUser;
@@ -42,13 +41,13 @@ public class UserController {
         return userService.findAllUser(pageable);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
     public void updateUserByAdmin(UserUpdateRequest request, @PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
         userService.updateUserByAdmin(request, id, userPrincipal.getId());
     }
 
-    @PutMapping("/me")
+    @PostMapping("/me")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MASTER')")
     public void updateUserByHimself(UserUpdateRequest request, @CurrentUser UserPrincipal userPrincipal) {
         userService.updateUserByHimself(request, userPrincipal.getId());

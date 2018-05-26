@@ -1,9 +1,6 @@
 package com.midasit.challenge.services;
 
-import com.midasit.challenge.entities.CompositePK;
-import com.midasit.challenge.entities.Order;
-import com.midasit.challenge.entities.OrderProduct;
-import com.midasit.challenge.entities.Product;
+import com.midasit.challenge.entities.*;
 import com.midasit.challenge.payloads.OpResponse;
 import com.midasit.challenge.payloads.OrderRequest;
 import com.midasit.challenge.payloads.OrderResponse;
@@ -20,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -52,7 +50,15 @@ public class OrderService {
         List<Order> list = orderRepository.findAll();
         List<OrderResponse> or = new ArrayList<>();
         for (Order order : list) {
-            or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(), order.isDone(), order.getUpdatedDate()));
+            List<OrderProduct> opList = new ArrayList<>(order.getOrderProducts());
+            List<String> nameList = new ArrayList<>();
+            List<Integer> qList = new ArrayList<>();
+            for (OrderProduct orderProduct : opList) {
+                nameList.add(orderProduct.getProduct().getProductName());
+                qList.add(orderProduct.getQuantity());
+            }
+            or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
+                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
         }
         return or;
     }
@@ -62,7 +68,15 @@ public class OrderService {
         List<Order> list = orderRepository.findAll();
         for (Order order : list) {
             if (!order.isDone()) {
-                or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(), order.isDone(), order.getUpdatedDate()));
+                List<OrderProduct> opList = new ArrayList<>(order.getOrderProducts());
+                List<String> nameList = new ArrayList<>();
+                List<Integer> qList = new ArrayList<>();
+                for (OrderProduct orderProduct : opList) {
+                    nameList.add(orderProduct.getProduct().getProductName());
+                    qList.add(orderProduct.getQuantity());
+                }
+                or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
+                        order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
             }
         }
         return or;
@@ -93,5 +107,33 @@ public class OrderService {
 
     public void cancelOrder() {
 
+    }
+
+    public List<OrderResponse> findMyOrder(UserPrincipal userPrincipal) {
+        List<OrderResponse> or = new ArrayList<>();
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        List<Order> orders = new ArrayList<>(user.getOrders());
+        for (Order order : orders) {
+            List<OrderProduct> opList = new ArrayList<>(order.getOrderProducts());
+            List<String> nameList = new ArrayList<>();
+            List<Integer> qList = new ArrayList<>();
+            for (OrderProduct orderProduct : opList) {
+                nameList.add(orderProduct.getProduct().getProductName());
+                qList.add(orderProduct.getQuantity());
+            }
+            or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
+                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
+        }
+        return or;
+    }
+
+    private int getSumOfPrice(Order order) {
+        int sum = 0;
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            int price = orderProduct.getProduct().getProductPrice();
+            int qt = orderProduct.getQuantity();
+            sum += price * qt;
+        }
+        return sum;
     }
 }

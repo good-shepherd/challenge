@@ -21,6 +21,6 @@ public class ProductRequest {
     private boolean menu;
 
     @JsonIgnore
-    private MultipartFile image;
+    private List<MultipartFile> image = new ArrayList<>();
 
 }

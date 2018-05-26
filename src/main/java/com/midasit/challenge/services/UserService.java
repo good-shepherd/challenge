@@ -73,8 +73,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Long id, Long adminId) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id).get();
+        user.setRoles(Collections.singleton(new Role(RoleName.ROLE_UNCONFIRMED)));
+        userRepository.save(user);
+        log.info("admin " + adminId + "blocks the user " + user.getId());
     }
 
     private List<String> getRoleStrings(User user) {

@@ -37,13 +37,13 @@ public class ProductService {
     public void uploadProduct(ProductRequest productRequest, UserPrincipal userPrincipal) {
         // a person who adds the item...
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
-        System.out.println("image name: " + productRequest.getImage().getOriginalFilename());
+        //System.out.println("image name: " + productRequest.getImage().getOriginalFilename());
         Product product = new Product(productRequest.getName(), productRequest.getPrice());
-        System.out.println("before: " + product.getProductImages().size());
+        //System.out.println("before: " + product.getProductImages().size());
         if (productRequest.getImage() != null) {
             product = addImageToProduct(product, productRequest);
         }
-        System.out.println("after: " + product.getProductImages().size());
+        //System.out.println("after: " + product.getProductImages().size());
         log.info("Saving - " + product.getProductName());
         productRepository.save(product);
     }
@@ -51,11 +51,12 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException());
-        Set<Image> images = product.getProductImages();
+        /*Set<Image> images = product.getProductImages();
         List<String> pathList = new ArrayList<>();
         images.forEach(o -> pathList.add(o.getImageLocation()));
-        uploadUtils.deleteFiles(pathList);
-        productRepository.delete(product);
+        uploadUtils.deleteFiles(pathList);*/
+        product.setOnMenu(false);
+        productRepository.save(product);
     }
 
     @Transactional
@@ -114,8 +115,8 @@ public class ProductService {
     }
 
     private Product addImageToProduct(Product product, ProductRequest productRequest) {
-        List<MultipartFile> l = new ArrayList<>();
-        l.add(productRequest.getImage());
+        List<MultipartFile> l = productRequest.getImage();
+        //l.add(productRequest.getImage());
         List<String> uploadedFiles = uploadUtils.saveFiles(l);
         Set<Image> images = new HashSet<>();
         uploadedFiles.forEach(o -> images.add(new Image(o, product)));

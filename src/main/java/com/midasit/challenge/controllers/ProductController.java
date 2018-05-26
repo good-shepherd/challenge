@@ -56,10 +56,14 @@ public class ProductController {
         return ResponseEntity.ok(new ApiResponse(true, "Product deleted successfully."));
     }
 
-    /*@Transactional
+    @Transactional
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
     public void uploadImage(List<MultipartFile> files, @PathVariable Long id) {
+        System.out.println("-----------------");
+        System.out.println(files.size());
+        files.forEach(o-> System.out.println(o.getOriginalFilename()));
+        System.out.println("-----------------");
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
         List<String> list = uploadUtils.saveFiles(files);
         List<Image> images = new ArrayList<>();
@@ -69,9 +73,9 @@ public class ProductController {
         }
         product.setProductImages(new HashSet<>(images));
         productRepository.save(product);
-    }*/
+    }
 
-    @PostMapping("/{id}")
+    /*@PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
     public ResponseEntity<ApiResponse> updateProduct(@ModelAttribute ProductRequest productRequest, @CurrentUser UserPrincipal userPrincipal,
                                                      @PathVariable(value = "id") Long productId) {
@@ -81,7 +85,7 @@ public class ProductController {
         }
         productService.updateProduct(productRequest, userPrincipal, productId);
         return ResponseEntity.ok(new ApiResponse(true, "Product Successfully updated"));
-    }
+    }*/
 
     @GetMapping("/{id}")
     public ProductResponse findById(@PathVariable(value = "id") Long productId) {
