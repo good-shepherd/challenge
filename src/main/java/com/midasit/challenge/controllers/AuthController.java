@@ -29,10 +29,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @AllArgsConstructor
 @RestController
@@ -66,7 +64,12 @@ public class AuthController {
         if (userRepository.existsByUserEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address is already taken!"), HttpStatus.BAD_REQUEST);
         }
-        User user = new User(signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()));
+        StringTokenizer st = new StringTokenizer(signUpRequest.getBirthdate(), "-");
+        int year = Integer.parseInt(st.nextToken());
+        int month = Integer.parseInt(st.nextToken());
+        int day = Integer.parseInt(st.nextToken());
+        User user = new User(signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()),
+                signUpRequest.getName(), LocalDate.of(year, month, day));
         /*switch (signUpRequest.getRole()) {
             case 1:
                 role = RoleName.ROLE_USER;
@@ -92,8 +95,7 @@ public class AuthController {
 
         // need to fix the URL below
         registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
-                + request.getScheme() + "://" + request.getServerName() + "/confirm?t=" + user.getUserConfirmationToken());
-        // registrationEmail.setFrom("noreply@domain.com");
+                + request.getScheme() + "://" + request.getServerName() + ":8080/confirm?t=" + user.getUserConfirmationToken());
         emailService.sendEmail(registrationEmail);
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully. Check your email and confirm it."));
     }

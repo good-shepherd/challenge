@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +30,15 @@ public class User extends DateAudit implements Serializable {
     @Column(name = "user_password")
     private String userPassword;
 
+    @Column(name = "user_name")
+    private String userName;
+
+    @Column(name = "user_birthdate")
+    private LocalDate userBirthdate;
+
+    @Column(name = "user_point")
+    private int userPoint;
+
     @Column(name = "user_confirmation_token")
     private String userConfirmationToken;
 
@@ -44,8 +54,13 @@ public class User extends DateAudit implements Serializable {
     @OneToMany(mappedBy = "target")
     private Set<Relationship> targets = new HashSet<>();
 
-    public User(String userEmail, String userPassword) {
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders = new HashSet<>();
+
+    public User(String userEmail, String userPassword, String userName, LocalDate userBirthdate) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        this.userName = userName;
+        this.userBirthdate = userBirthdate;
     }
 }

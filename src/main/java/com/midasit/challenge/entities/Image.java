@@ -25,6 +25,10 @@ public class Image {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     public Image(String imageLocation, Post post) {
         this.imageLocation = imageLocation;
         this.post = post;
