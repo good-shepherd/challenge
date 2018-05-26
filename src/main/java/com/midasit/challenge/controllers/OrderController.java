@@ -2,6 +2,7 @@ package com.midasit.challenge.controllers;
 
 import com.midasit.challenge.entities.Order;
 import com.midasit.challenge.entities.OrderProduct;
+import com.midasit.challenge.entities.User;
 import com.midasit.challenge.payloads.ApiResponse;
 import com.midasit.challenge.payloads.OpResponse;
 import com.midasit.challenge.payloads.OrderRequest;
@@ -51,6 +52,11 @@ public class OrderController {
         return orderService.findOpById(id);
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MASTER')")
+    public List<OrderResponse> findMyOrder(@CurrentUser UserPrincipal userPrincipal) {
+        return orderService.findMyOrder(userPrincipal);
+    }
 
     @PostMapping("/{id}")
     public ResponseEntity<ApiResponse> handleOrder(@PathVariable Long id) {
