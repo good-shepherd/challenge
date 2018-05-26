@@ -4,19 +4,25 @@
       <a href="#">
         <router-link to="/">Midas Cafe</router-link>
       </a>
-      <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
-        <a href="#">
-          <router-link to="menu">메뉴관리</router-link>
-        </a>
-      </div>
+
       <div v-if="this.$store.state.token !== 0">
         <a href="#">
           <router-link to="order">예약 주문</router-link>
         </a>
       </div>
+      <div v-if="this.$store.state.token !== 0">
+        <a href="#">
+          <router-link to="myOrder">나의 예약</router-link>
+        </a>
+      </div>
       <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
         <a href="#">
           <router-link to="orderManagement">예약 관리</router-link>
+        </a>
+      </div>
+      <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">
+        <a href="#">
+          <router-link to="menu">메뉴관리</router-link>
         </a>
       </div>
       <div v-if="this.$store.state.token !== 0  && (this.$store.state.role == 'ROLE_MASTER' || this.$store.state.role == 'ROLE_ADMIN' )">

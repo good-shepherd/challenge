@@ -189,26 +189,26 @@
             <b-form-input type="number" v-model="price"></b-form-input>
           </b-col>
         </b-row>
-      <!-- <div v-if="!image">
-          <b-row class="my-1">
+        <!--<div v-if="!image">-->
+          <!--<b-row class="my-1">-->
 
-            <b-col sm="3">
-              <label v-mode="image" :for="image">사진 :</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-file enctype="multipart/form-data" class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"
-                           placeholder="이미지를 선택하세요"></b-form-file>
-            </b-col>
+            <!--<b-col sm="3">-->
+              <!--<label v-mode="image" :for="image">사진 :</label>-->
+            <!--</b-col>-->
+            <!--<b-col sm="9">-->
+              <!--<b-form-file enctype="multipart/form-data" class="mt-auto" :id="image" v-model="image" :state="Boolean(image)" @change="onFileChange"-->
+                           <!--placeholder="이미지를 선택하세요"></b-form-file>-->
+            <!--</b-col>-->
 
-          </b-row>
+          <!--</b-row>-->
 
-        </div>
-        <div v-else>
-          <b-col sm="12">
-            <b-img :src="image" fluid alt="Fluid image"/>
-          </b-col>
-        </div>-->
-        <b-btn class="mt-auto" @click="removeImage">초기화</b-btn>
+        <!--</div>-->
+        <!--<div v-else>-->
+          <!--<b-col sm="12">-->
+            <!--<b-img :src="image" fluid alt="Fluid image"/>-->
+          <!--</b-col>-->
+        <!--</div>-->
+        <!--<b-btn class="mt-auto" @click="removeImage">초기화</b-btn>-->
 
 
       </div>
@@ -250,7 +250,7 @@ export default {
         { key: 'name', label: '메뉴 이름', sortable: true, sortDirection: 'desc' },
         { key: 'price', label: '가격', sortable: true, class: 'text-center' },
         { key: 'menu', label: '판매여부' },
-        { key: 'actions', label: 'Actions' },
+        { key: 'actions', label: '관리' },
       ],
       currentPage: 1,
       perPage: 10,
@@ -355,7 +355,6 @@ export default {
       data.append('image', this.image);
       const token = localStorage.getItem('token');
       console.log(token);
-      var qs = require('qs');
 
       const auth = {
         headers: { 'Authorization': 'Bearer '.concat(token), 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -373,7 +372,15 @@ export default {
       });
       // const data2 = new FormData();
       // data2.append('image', this.image);
-
+      // axios.post('http://192.168.0.32:8080/api/products/66', data, auth ).then((response) => {
+      //   if (response.status === 200) {
+      //     alert('등록 완료');
+      //   } else if (response.status === 401) {
+      //     alert('입력 값을 확인하세요');
+      //   }
+      // }).catch((error) => {
+      //   console.log(error);
+      // });
 
       this.hideAddModal();
     },

@@ -25,7 +25,6 @@
 import axios from 'axios';
 
 export default {
-  name: 'order',
   data() {
     return {
       email: '',
@@ -50,7 +49,7 @@ export default {
           this.$router.push('/');
 
 
-        } else if (response.status === 401) {
+        } else {
           alert('회원 정보를 확인하세요.');
         }
       }).catch((error) => {
