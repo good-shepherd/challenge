@@ -69,8 +69,18 @@ public class OrderService {
     }
 
     public OpResponse findOpById(Long id) {
-
-        return null;
+        List<OrderProduct> op = opRepository.getOPs(id);
+        OpResponse opr = new OpResponse();
+        opr.setOrderId(id);
+        List<Long> productIds = new ArrayList<>();
+        List<String> productNames = new ArrayList<>();
+        for (OrderProduct orderProduct : op) {
+            productIds.add(orderProduct.getProduct().getId());
+            productNames.add(orderProduct.getProduct().getProductName());
+        }
+        opr.setProductId(productIds);
+        opr.setProductName(productNames);
+        return opr;
     }
 
 
