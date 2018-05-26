@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class UserResponse {
+    private Long id;
     private String email;
     private String name;
     private LocalDate birthdate;

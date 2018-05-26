@@ -1,8 +1,7 @@
 package com.midasit.challenge.services;
 
-import com.midasit.challenge.entities.Role;
-import com.midasit.challenge.entities.RoleName;
-import com.midasit.challenge.entities.User;
+import com.midasit.challenge.entities.*;
+import com.midasit.challenge.payloads.OrderResponse;
 import com.midasit.challenge.payloads.UserResponse;
 import com.midasit.challenge.payloads.UserUpdateRequest;
 import com.midasit.challenge.repositories.RoleRepository;
@@ -33,7 +32,7 @@ public class UserService {
         Set<Role> roles = user.getRoles();
         List<String> sroles = new ArrayList<>();
         roles.forEach(o -> sroles.add(o.getName().toString()));
-        UserResponse response = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(), sroles.get(0),
+        UserResponse response = new UserResponse(user.getId(), user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(), sroles.get(0),
                 user.getCreatedDate(), user.getUpdatedDate());
         return response;
     }
@@ -70,6 +69,7 @@ public class UserService {
         user.setUserBirthdate(LocalDate.parse(request.getBirthdate()));
         user.setUserEmail(request.getEmail());
         user.setUserPoint(request.getPoint());
+        user.setRoles(Collections.singleton(roleRepository.findByName(request.getRoleName()).get()));
         userRepository.save(user);
     }
 
@@ -89,8 +89,38 @@ public class UserService {
     }
 
     private UserResponse userToResponse(User user) {
-        UserResponse res = new UserResponse(user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(),
+        UserResponse res = new UserResponse(user.getId(), user.getUserEmail(), user.getUserName(), user.getUserBirthdate(), user.getUserPoint(),
                 getRoleStrings(user).get(0), user.getCreatedDate(), user.getUpdatedDate());
         return res;
+    }
+
+    public List<OrderResponse> findOrderByDate(Long id, int yyyy, int mm) {
+        List<OrderResponse> or = new ArrayList<>();
+        User user = userRepository.findById(id).get();
+        List<Order> orders = new ArrayList<>(user.getOrders());
+        for (Order order : orders) {
+            if (order.getUpdatedDate().getMonthValue() == mm && order.getUpdatedDate().getYear() == yyyy) {
+                List<OrderProduct> opList = new ArrayList<>(order.getOrderProducts());
+                List<String> nameList = new ArrayList<>();
+                List<Integer> qList = new ArrayList<>();
+                for (OrderProduct orderProduct : opList) {
+                    nameList.add(orderProduct.getProduct().getProductName());
+                    qList.add(orderProduct.getQuantity());
+                }
+                or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
+                        order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
+            }
+        }
+        return or;
+    }
+
+    private int getSumOfPrice(Order order) {
+        int sum = 0;
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            int price = orderProduct.getProduct().getProductPrice();
+            int qt = orderProduct.getQuantity();
+            sum += price * qt;
+        }
+        return sum;
     }
 }

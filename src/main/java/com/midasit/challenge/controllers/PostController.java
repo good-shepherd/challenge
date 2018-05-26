@@ -32,7 +32,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("(@postService.findById(#postId).getUserId() == #currentUser.getId()) or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("(@postService.findById(#postId).getUserId() == #currentUser.getId()) or hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
     public ResponseEntity<ApiResponse> deletePost(@CurrentUser UserPrincipal currentUser, @PathVariable(value = "id") Long postId) {
         postService.deletePost(postId);
         return ResponseEntity.ok(new ApiResponse(true, "Post deleted successfully."));
