@@ -349,7 +349,7 @@ export default {
       const data = new FormData();
       data.append('name', this.name);
       data.append('price', this.price);
-      data.append('image', this.image);
+      // data.append('image', this.image);
       const token = localStorage.getItem('token');
       console.log(token);
 
@@ -367,7 +367,7 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-      const data2 = new FormData();
+      /*const data2 = new FormData();
       data2.append('image', this.image);
       axios.post('http://192.168.0.32:8080/api/products/66', data, auth).then((response) => {
         if (response.status === 200) {
@@ -377,7 +377,7 @@ export default {
         }
       }).catch((error) => {
         console.log(error);
-      });
+      });*/
 
       this.hideAddModal();
     },

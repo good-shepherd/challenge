@@ -3,13 +3,13 @@
     <!-- User Interface controls -->
     <b-row>
       <b-col sm="5">
-        <b-button @click="this.month"> 이전</b-button>
+        <b-button @click="prevMonth"> 이전</b-button>
       </b-col>
       <b-col sm="2">
         {{this.year}}년 {{this.month}}월 구매내역
       </b-col>
       <b-col sm="5">
-        <b-button @click="this.month++"> 다음</b-button>
+        <b-button @click="nextMonth"> 다음</b-button>
       </b-col>
     </b-row>
 
@@ -20,37 +20,16 @@
              :per-page="perPage"
 
     >
-      <template slot="add" slot-scope="row">
-
-
-        <input type="checkbox" v-model="selected" :value="row.item">
-
-
-      </template>
       <template slot="name" slot-scope="row">{{row.value}}</template>
-
 
     </b-table>
 
-
-    <b-list-group title="주문 목록">
-      <b-list-group-item v-for="item in selected" :key="item.id"
-                         class="d-flex justify-content-between align-items-center">
-        <b-col sm="8">
-          {{item.name}}
-        </b-col>
-        <b-col sm="4">
-          <button @click.stop="item.quantity--"> -</button>
-          <b-badge variant="primary" pill>{{item.quantity}}</b-badge>
-          <button @click.stop="item.quantity++"> +</button>
-        </b-col>
-      </b-list-group-item>
-    </b-list-group>
   </b-container>
 </template>
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
   created() {
@@ -76,10 +55,39 @@ export default {
   },
   methods: {
     prevMonth() {
+      if(this.month>1){
+        this.month--;
 
+      }else{
+        this.year--;
+        this.month = 12;
+      }
+      const token = localStorage.getItem('token');
+      const auth = {
+        headers: { Authorization: 'Bearer '.concat(token) },
+      };
+      axios.get('http://192.168.0.32:8080/api/users/'.concat(this.$store.state.id).concat('/orders/').concat(this.year).concat('/')
+        .concat(this.month), auth).then((response) => {
+        console.log(response);
+        this.items = response.data;
+      });
     },
     nextMonth(){
-
+      if(this.month>11){
+        this.year++;
+        this.month=1;
+      }else{
+        this.month++;
+      }
+      const token = localStorage.getItem('token');
+      const auth = {
+        headers: { Authorization: 'Bearer '.concat(token) },
+      };
+      axios.get('http://192.168.0.32:8080/api/users/'.concat(this.$store.state.id).concat('/orders/').concat(this.year).concat('/')
+        .concat(this.month), auth).then((response) => {
+        console.log(response);
+        this.items = response.data;
+      });
     }
   },
 };
