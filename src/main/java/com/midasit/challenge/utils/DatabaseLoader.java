@@ -1,10 +1,13 @@
 package com.midasit.challenge.utils;
 
+import com.midasit.challenge.entities.Product;
 import com.midasit.challenge.entities.Role;
 import com.midasit.challenge.entities.RoleName;
 import com.midasit.challenge.entities.User;
 import com.midasit.challenge.exceptions.AppException;
 import com.midasit.challenge.repositories.*;
+import com.midasit.challenge.services.PostService;
+import com.midasit.challenge.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -19,11 +22,13 @@ import java.util.Set;
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
+
     RoleRepository roleRepository;
     UserRepository userRepository;
     PostRepository postRepository;
     ImageRepository imageRepository;
     RelationshipRepository relationshipRepository;
+    ProductRepository productRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -35,12 +40,6 @@ public class DatabaseLoader implements CommandLineRunner {
         // relationshipRepository.deleteAll();
         //userRepository.deleteAll();
         // postRepository.deleteAll();
-       // User supUser = new User("master@fakemail.com", "1234567",
-          //      "superuser", LocalDate.of(1990, 9, 29));
-        //Role userRole = roleRepository.findByName(RoleName.ROLE_MASTER).orElseThrow(()->new ResourceNotFoundException());
-       // supUser.setRoles(Collections.singleton(userRole));
-        //System.out.println(supUser.getRoles().toString());
-        //userRepository.save(supUser);
 
     }
 }

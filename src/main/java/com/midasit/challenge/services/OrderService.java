@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Slf4j
@@ -32,17 +31,23 @@ public class OrderService {
 
     @Transactional
     public void placeOrder(OrderRequest orderRequest, UserPrincipal userPrincipal) {
-        Order order = new Order(userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException()), false);
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException());
+
+        Order order = new Order(user, false);
         orderRepository.save(order);
         List<String> productId = orderRequest.getProductId();
         List<String> quantity = orderRequest.getQuantity();
+        int sum = 0;
         for (int i = 0; i < productId.size(); i++) {
             System.out.println("product: " + productId.get(i) + ", quantity: " + quantity.get(i));
             Product product = productRepository.findById(Long.parseLong(productId.get(i))).orElseThrow(() -> new ResourceNotFoundException());
             // OrderProduct op = new OrderProduct(new CompositePK(order.getId(), product.getId()), order, product, Integer.parseInt(quantity.get(i)));
-            OrderProduct op = new OrderProduct(new CompositePK(order.getId(), product.getId()), order, product, Integer.parseInt(quantity.get(i)));
+            int qt = Integer.parseInt(quantity.get(i));
+            OrderProduct op = new OrderProduct(new CompositePK(order.getId(), product.getId()), order, product, qt);
+            sum += (product.getProductPrice() / 2) * qt;
             opRepository.save(op);
         }
+        user.setUserPoint(user.getUserPoint() + sum);
         // notification needed + need to be refactored (String list)
     }
 
@@ -58,7 +63,7 @@ public class OrderService {
                 qList.add(orderProduct.getQuantity());
             }
             or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
-                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
+                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getCreatedDate()));
         }
         return or;
     }
@@ -76,7 +81,7 @@ public class OrderService {
                     qList.add(orderProduct.getQuantity());
                 }
                 or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
-                        order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
+                        order.isDone(), getSumOfPrice(order), qList, nameList, order.getCreatedDate()));
             }
         }
         return or;
@@ -122,7 +127,7 @@ public class OrderService {
                 qList.add(orderProduct.getQuantity());
             }
             or.add(new OrderResponse(order.getId(), order.getCustomer().getId(), order.getCustomer().getUserName(),
-                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getUpdatedDate()));
+                    order.isDone(), getSumOfPrice(order), qList, nameList, order.getCreatedDate()));
         }
         return or;
     }

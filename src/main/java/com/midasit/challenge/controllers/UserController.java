@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MASTER')")
-    public UserResponse getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public UserResponse getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return userService.findById(userPrincipal.getId());
     }
 

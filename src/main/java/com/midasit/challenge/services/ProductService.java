@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -82,6 +79,7 @@ public class ProductService {
         List<Product> list = page.getContent();
         List<ProductResponse> res = new ArrayList<>();
         list.forEach(o -> res.add(productToResponse(o)));
+        Collections.reverse(res);
         return res;
     }
 
